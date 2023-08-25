@@ -1,0 +1,16 @@
+header {
+    background-color: orange;
+    height: 100px;
+    top: 0;
+    color: green;
+    text-align: center;
+    font-size: 22px;
+}
+
+#ProductCategory {
+    font-size: 20px;
+}
+
+#Inventory {
+    font-size: 20px;
+}
