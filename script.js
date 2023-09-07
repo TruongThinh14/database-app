@@ -25,18 +25,38 @@
 // }
 // run().catch(console.dir);
 
-console.log("test")
-const{createPool} = require('mysql')
+const mysql = require('mysql')
 
-const pool = createPool(
+
+const connection = mysql.createConnection(
   {
     host:"localhost",
     user:"root",
     password:"123456"
   }
 )
-pool.query("SELECT * FROM w6.project",(err,res) =>{
-  return console.log(res)
-}
+connection.connect((err) => {
+  if(err) throw new Error(err);
+  console.log("Connected")
 
-)
+  connection.query("DROP DATABASE IF EXISTS testdb",(err,res) =>{
+    if(err) throw new Error(err);
+  console.log("database dropped")
+  return console.log(res)
+  })
+
+  connection.query("CREATE DATABASE testdb",(err,res) =>{
+    if(err) throw new Error(err);
+  console.log("database created")
+  return console.log(res)
+  })
+})
+// connection.query("SELECT * FROM w6.project",(err,res) =>{
+//   if(err) throw new Error(err);
+//   console.log("Get data successfully")
+//   return console.log(res)
+// }
+
+// )
+//admindb
+//123456Aa!
