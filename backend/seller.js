@@ -49,7 +49,8 @@ connection.connect((err) => {
     id int PRIMARY KEY,
     name varchar(255),
     address varchar(255),
-    total_volume int)`,(err,res) =>{
+    total_volume int,
+    product_id INT REFERENCES seller_product(id))`,(err,res) =>{
     if(err) throw new Error(err)
     console.log("table warehouse created")
  
@@ -58,9 +59,9 @@ connection.connect((err) => {
    //add data to warehouse table
   connection.query(`INSERT INTO warehouse
   VALUES
-  (1,"north warehouse","hanoi, d5,cau giay,52", 10000),
-  (2,"central warehouse","hue, d3, Nguyen trai, 73", 500),
-  (3,"south warehouse","hcm, d7, Nguyen Van Linh, 266", 1000)`,(err,res) =>{
+  (1,"north warehouse","hanoi, d5,cau giay,52", 10000,null),
+  (2,"central warehouse","hue, d3, Nguyen trai, 73", 500,null),
+  (3,"south warehouse","hcm, d7, Nguyen Van Linh, 266", 1000,null)`,(err,res) =>{
    if(err) throw new Error(err)
    console.log("data added to table warehouse")
    //return console.log(res)
@@ -118,7 +119,7 @@ connection.connect((err) => {
       connection.query(`
       INSER INTO warehouse
       VALUES
-      (${newId},${name},${address}, ${total_volume})
+      (${newId},${name},${address}, ${total_volume},null)
       `,(err,result) =>{
         if(err) throw new Error(err)
         console.log(`Warehouse id:${newId} added`)
@@ -144,8 +145,24 @@ function editWarehouse(inputId,inputName,inputAddress,inputTotalVolum){
 }
 //admin delete warehouse
 function deleteWarehouse(inputId){
-  connection.query(`
-  DELETE FROM warehouse
-  WHERE id = ${inputId}`)
+  let isNull = false
+  connection.query(`SELECT Max(product_id) FROM warehouse`, (err,result) =>{
+    if(err) throw new Error(err)
+    if(result == null){
+      isNull = true
+      console.log("warehouse is null")
+    }
+    console.log(`warehouse not null`)
+  })
+  if(isNull){
+    connection.query(`
+    DELETE FROM warehouse
+    WHERE id = ${inputId}`,(err,result) =>{
+      if(err) throw new Error(err)
+      console.log(`Warehouse id:${newId} deleted`)
+    })
+  }
+  console.log("ware houe not empty, cannot delete")
+  
 }
 
