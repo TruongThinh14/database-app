@@ -1,30 +1,3 @@
-
-// const { MongoClient, ServerApiVersion } = require('mongodb');
-// const uri = "mongodb+srv://dbUser:iKd5d8MJzhJq7nMQ@cluster0.gnpwyx0.mongodb.net/?retryWrites=true&w=majority";
-
-// // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(uri, {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true,
-//   }
-// });
-
-// async function run() {
-//   try {
-//     // Connect the client to the server	(optional starting in v4.7)
-//     await client.connect();
-//     // Send a ping to confirm a successful connection
-//     await client.db("admin").command({ ping: 1 });
-//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await client.close();
-//   }
-// }
-// run().catch(console.dir);
-
 const mysql = require('mysql')
 const express = require("express")
 const app = express()
@@ -85,49 +58,32 @@ connection.connect((err) => {
   })
 
   app.use(bodyParser.json());
-  app.get("/",(req,res) => {
+  //get seller product list from db
+  app.get("/seller/product", (req,res) => {
     let list;
     connection.query("SELECT * FROM asm2dbss.seller_product",(err,result) =>{
     if(err) throw new Error(err)
-        list = result
-    })
-    res.send(list)
+      list = result
+      res.send(list)
 })
+    })
+   
+    
+// app.get("/", async (req,res) => {
+//   let list;
+//   list = await connection.query("SELECT * FROM asm2dbss.seller_product")
+//   // ,(err,result) =>{
+//   // if(err) throw new Error(err)
+//   //   console.log(list)
+    
+//   // })
+//   console.log(list)
+//   res.send("list")
+// })
 
   app.listen(port, ()=>{
     console.log(`Server running on port ${port}`)
   })
-
-  // var sellerProductList = []
-  
-  // connection.query("SELECT * FROM asm2dbss.seller_product",(err,res) =>{
-  //   if(err) throw new Error(err)
-  //   sellerProductList = res
-  // })
-
-  // const htmlStringList = sellerProductList.map(product =>{
-  //   return(
-  //     `<div class="product-item">
-  //         <div class="product-item-left">
-  //             <img src=${product.imgString}/>
-  //         </div>
-  //         <div class="product-item-middle">
-  //             <p>Product name:<b>${product.title}</b></p>
-  //             <p>Description:<b>${product.description}</b></p>
-  //         </div>
-  //         <div class="product-item-right">
-  //             <p>Price:<b>${product.price}</b></p>
-  //             <p>Dimension:<b>l:${product.length}, w:${product.width}, h:${product.height}</b></p>
-  //         </div>
-  //         <div class="product-item-btn">
-  //             <a href="#">edit</a>
-  //             <button>delete</button>
-  //         </div>
-  //     </div>`
-  //   )
-  // });
-
-  // list.innerHTML = htmlStringList.join("\n") 
 })
 
 
