@@ -103,58 +103,13 @@ connection.connect((err) => {
   // })
  
 //addmin add new ware house
-  function addWarehouse(name,address,total_volume){
-      //get max id from warehouse list to generate new id
-      let newId;
-      connection.query(`SELECT MAX(id) FROM warehouse`,(err,result)=>{
-        if(err) throw new Error(err)
-        newId = result + 1
-      })
-      connection.query(`
-      INSER INTO warehouse
-      VALUES
-      (${newId},${name},${address}, ${total_volume})
-      `,(err,result) =>{
-        if(err) throw new Error(err)
-        console.log(`Warehouse id:${newId} added`)
-      })
-  }
+  
   //admin check warehouse info
   
 //admin edit warehouse
-function editWarehouse(inputId,inputName,inputAddress,inputTotalVolum){
-  connection.query(`
-  UPDATE warehouse
-  SET name = ${inputName}, address = ${inputAddress}, total_volume = ${inputTotalVolum}
-  WHERE id = ${inputId}
-  `, (err,result) =>{
-    if(err) throw new Error(err)
-    console.log(`Warehouse id:${newId} edited`)
-  })
-}
+
 //admin delete warehouse
-function deleteWarehouse(inputId){
-  let isNull = false
-  connection.query(`select * from seller_product
-  where warehouse_id = ${inputId}`, (err,result) =>{
-    if(err) throw new Error(err)
-    if(result == null){
-      isNull = true
-      console.log("warehouse is null")
-    }
-    console.log(`warehouse not null`)
-  })
-  if(isNull){
-    connection.query(`
-    DELETE FROM warehouse
-    WHERE id = ${inputId}`,(err,result) =>{
-      if(err) throw new Error(err)
-      console.log(`Warehouse id:${newId} deleted`)
-    })
-  }
-  console.log("ware houe not empty, cannot delete")
-  
-}
+
 //seller check warehouse availability
 function checkWarehouseAvalability(product){
   let productVolume = product.length * product.width * product.height

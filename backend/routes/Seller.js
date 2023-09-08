@@ -20,16 +20,6 @@ connection.query("use asm2DBss",(err,res) =>{
 // return console.log(res)
 })
 
-router.get("/:inputId", findWarehouse)
 
-
-function findWarehouse(req, res){
-    let {inputId} = req.params
-   connection.query(`SELECT * FROM warehouse WHERE id = ${inputId}`,(err,result) =>{
-    if(err) throw new Error(err)
-    console.log(`Warehouse id:${inputId} fetched`)
-    res.send(result)
-  })
-}
 
 module.exports = router

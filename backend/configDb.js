@@ -33,7 +33,7 @@ exports.setupDb = () => {
         connection.query(`DROP TABLE IF EXISTS warehouse`)
         //create seller product table
         connection.query(`CREATE TABLE seller_product(
-          id int PRIMARY KEY,
+          id int PRIMARY KEY AUTO_INCREMENT,
           title varchar(255),
           description varchar(255),
           price int, 
@@ -46,7 +46,7 @@ exports.setupDb = () => {
         })
         //create warehouse table
         connection.query(`CREATE TABLE warehouse(
-          id int PRIMARY KEY,
+          id int PRIMARY KEY AUTO_INCREMENT,
           name varchar(255),
           address varchar(255),
           total_volume int
@@ -69,11 +69,11 @@ exports.setupDb = () => {
         //add data to seller product table
         connection.query(`INSERT INTO seller_product
          VALUES
-         (1,"watermelon","juicy and delicious", 10000,"img String",10,10,10,5),
-         (2,"RC car","fast and cheap", 50000,"img String",20,7,13,5),
-         (3,"Couch","super comfy", 700000,"img String",100,40,40,5),
-         (4,"Bath tub","shower like a king", 1400000,"img String",100,50,30,5),
-         (5,"Knife","package include whole set", 400000,"img String",20,10,5,5)`,(err,res) =>{
+         (1,"watermelon","juicy and delicious", 10000,"img String",10,10,10,1),
+         (2,"RC car","fast and cheap", 50000,"img String",20,7,13,3),
+         (3,"Couch","super comfy", 700000,"img String",100,40,40,1),
+         (4,"Bath tub","shower like a king", 1400000,"img String",100,50,30,3),
+         (5,"Knife","package include whole set", 400000,"img String",20,10,5,3)`,(err,res) =>{
           if(err) throw new Error(err)
           console.log("data added to table seller_product")
         })
