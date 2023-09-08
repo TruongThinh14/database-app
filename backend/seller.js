@@ -1,8 +1,8 @@
 const mysql = require('mysql')
 const express = require("express")
+const { connect } = require('http2')
 const app = express()
 const port = 2222
-const bodyParser = require("body-parser")
 
 const connection = mysql.createConnection(
   {
@@ -75,36 +75,77 @@ connection.connect((err) => {
    (5,"Knife","package include whole set", 400000,"img String",20,10,5)`,(err,res) =>{
     if(err) throw new Error(err)
     console.log("data added to table seller_product")
-    //return console.log(res)
   })
+ 
+  //create procedure find_suitable_warehouse
+  // connection.query(`DELIMITER $$ 
+  //   CREATE PROCEDURE find_suitable_warehouse(IN volumn INT)
+  //   BEGIN
+  //     SELECT * FROM warehouse
+  //     WHERE total_volume >= volumn;
+  //   END $$ 
+  // DELIMITER ; `,(err,res) =>{
+  //   if(err) throw new Error(err)
+  //   console.log("procedure find suitable warehouse created")
+  // })
+  
+ 
 
-  app.use(bodyParser.json());
-  //get seller product list from db
-  app.get("/seller/product", (req,res) => {
-    let list;
-    connection.query("SELECT * FROM asm2dbss.seller_product",(err,result) =>{
-    if(err) throw new Error(err)
-      list = result
-      res.send(list)
-})
-    })
-   
-    
-// app.get("/", async (req,res) => {
-//   let list;
-//   list = await connection.query("SELECT * FROM asm2dbss.seller_product")
-//   // ,(err,result) =>{
-//   // if(err) throw new Error(err)
-//   //   console.log(list)
-    
-//   // })
-//   console.log(list)
-//   res.send("list")
-// })
+
 
   app.listen(port, ()=>{
     console.log(`Server running on port ${port}`)
   })
 })
 
+ //get all seller product from db
+ app.get("/seller/product", (req,res) => {
+  let list;
+  connection.query("SELECT * FROM asm2dbss.seller_product",(err,result) =>{
+  if(err) throw new Error(err)
+    list = result
+    res.send(list)
+})
+  })
+//addmin add new ware house
+  function addWarehouse(name,address,total_volume){
+      //get max id from warehouse list to generate new id
+      let newId;
+      connection.query(`SELECT MAX(id) FROM warehouse`,(err,result)=>{
+        if(err) throw new Error(err)
+        newId = result + 1
+      })
+      connection.query(`
+      INSER INTO warehouse
+      VALUES
+      (${newId},${name},${address}, ${total_volume})
+      `,(err,result) =>{
+        if(err) throw new Error(err)
+        console.log(`Warehouse id:${newId} added`)
+      })
+  }
+  //admin check warehouse info
+  function findWarehouse(inputId){
+    connection.query(`SELECT * FROM warehouse WHERE id = ${inputId}`,(err,result) =>{
+      if(err) throw new Error(err)
+      console.log(`Warehouse id:${newId} fetched`)
+    })
+  }
+//admin edit warehouse
+function editWarehouse(inputId,inputName,inputAddress,inputTotalVolum){
+  connection.query(`
+  UPDATE warehouse
+  SET name = ${inputName}, address = ${inputAddress}, total_volume = ${inputTotalVolum}
+  WHERE id = ${inputId}
+  `, (err,result) =>{
+    if(err) throw new Error(err)
+    console.log(`Warehouse id:${newId} edited`)
+  })
+}
+//admin delete warehouse
+function deleteWarehouse(inputId){
+  connection.query(`
+  DELETE FROM warehouse
+  WHERE id = ${inputId}`)
+}
 
