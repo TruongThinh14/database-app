@@ -26,7 +26,10 @@
 // run().catch(console.dir);
 
 const mysql = require('mysql')
-const list = document.querySelector(".product-list")
+const express = require("express")
+const app = express()
+const port = 2222
+const bodyParser = require("body-parser")
 
 const connection = mysql.createConnection(
   {
@@ -81,12 +84,26 @@ connection.connect((err) => {
     return console.log(res)
   })
 
-  var sellerProductList = []
-  
-  connection.query("SELECT * FROM asm2dbss.seller_product",(err,res) =>{
+  app.use(bodyParser.json());
+  app.get("/",(req,res) => {
+    let list;
+    connection.query("SELECT * FROM asm2dbss.seller_product",(err,result) =>{
     if(err) throw new Error(err)
-    sellerProductList = res
+        list = result
+    })
+    res.send(list)
+})
+
+  app.listen(port, ()=>{
+    console.log(`Server running on port ${port}`)
   })
+
+  // var sellerProductList = []
+  
+  // connection.query("SELECT * FROM asm2dbss.seller_product",(err,res) =>{
+  //   if(err) throw new Error(err)
+  //   sellerProductList = res
+  // })
 
   // const htmlStringList = sellerProductList.map(product =>{
   //   return(
@@ -110,6 +127,7 @@ connection.connect((err) => {
   //   )
   // });
 
-  // list.innerHTML = htmlStringList.join("\n")
-  
+  // list.innerHTML = htmlStringList.join("\n") 
 })
+
+
