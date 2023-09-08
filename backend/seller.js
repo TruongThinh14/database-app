@@ -39,7 +39,8 @@ connection.connect((err) => {
     description varchar(255),
     price int, 
     imgString varchar(255), 
-    length int, width int, height int)`,(err,res) =>{
+    length int, width int, height int,
+    warehouse_id INT REFERENCES warehouse(id))`,(err,res) =>{
     if(err) throw new Error(err)
     console.log("table seller_product created")
    // return console.log(res)
@@ -49,8 +50,8 @@ connection.connect((err) => {
     id int PRIMARY KEY,
     name varchar(255),
     address varchar(255),
-    total_volume int,
-    product_id INT REFERENCES seller_product(id))`,(err,res) =>{
+    total_volume int
+    )`,(err,res) =>{
     if(err) throw new Error(err)
     console.log("table warehouse created")
  
@@ -59,9 +60,9 @@ connection.connect((err) => {
    //add data to warehouse table
   connection.query(`INSERT INTO warehouse
   VALUES
-  (1,"north warehouse","hanoi, d5,cau giay,52", 10000,null),
-  (2,"central warehouse","hue, d3, Nguyen trai, 73", 500,null),
-  (3,"south warehouse","hcm, d7, Nguyen Van Linh, 266", 1000,null)`,(err,res) =>{
+  (1,"north warehouse","hanoi, d5,cau giay,52", 90000),
+  (2,"central warehouse","hue, d3, Nguyen trai, 73", 500),
+  (3,"south warehouse","hcm, d7, Nguyen Van Linh, 266", 1000)`,(err,res) =>{
    if(err) throw new Error(err)
    console.log("data added to table warehouse")
    //return console.log(res)
@@ -69,31 +70,16 @@ connection.connect((err) => {
   //add data to seller product table
   connection.query(`INSERT INTO seller_product
    VALUES
-   (1,"watermelon","juicy and delicious", 10000,"img String",10,10,10),
-   (2,"RC car","fast and cheap", 50000,"img String",20,7,13),
-   (3,"Couch","super comfy", 700000,"img String",100,40,40),
-   (4,"Bath tub","shower like a king", 1400000,"img String",100,50,30),
-   (5,"Knife","package include whole set", 400000,"img String",20,10,5)`,(err,res) =>{
+   (1,"watermelon","juicy and delicious", 10000,"img String",10,10,10,5),
+   (2,"RC car","fast and cheap", 50000,"img String",20,7,13,5),
+   (3,"Couch","super comfy", 700000,"img String",100,40,40,5),
+   (4,"Bath tub","shower like a king", 1400000,"img String",100,50,30,5),
+   (5,"Knife","package include whole set", 400000,"img String",20,10,5,5)`,(err,res) =>{
     if(err) throw new Error(err)
     console.log("data added to table seller_product")
   })
  
-  //create procedure find_suitable_warehouse
-  // connection.query(`DELIMITER $$ 
-  //   CREATE PROCEDURE find_suitable_warehouse(IN volumn INT)
-  //   BEGIN
-  //     SELECT * FROM warehouse
-  //     WHERE total_volume >= volumn;
-  //   END $$ 
-  // DELIMITER ; `,(err,res) =>{
-  //   if(err) throw new Error(err)
-  //   console.log("procedure find suitable warehouse created")
-  // })
-  
  
-
-
-
   app.listen(port, ()=>{
     console.log(`Server running on port ${port}`)
   })
@@ -119,7 +105,7 @@ connection.connect((err) => {
       connection.query(`
       INSER INTO warehouse
       VALUES
-      (${newId},${name},${address}, ${total_volume},null)
+      (${newId},${name},${address}, ${total_volume})
       `,(err,result) =>{
         if(err) throw new Error(err)
         console.log(`Warehouse id:${newId} added`)
@@ -146,7 +132,8 @@ function editWarehouse(inputId,inputName,inputAddress,inputTotalVolum){
 //admin delete warehouse
 function deleteWarehouse(inputId){
   let isNull = false
-  connection.query(`SELECT Max(product_id) FROM warehouse`, (err,result) =>{
+  connection.query(`select * from seller_product
+  where warehouse_id = ${inputId}`, (err,result) =>{
     if(err) throw new Error(err)
     if(result == null){
       isNull = true
@@ -165,4 +152,36 @@ function deleteWarehouse(inputId){
   console.log("ware houe not empty, cannot delete")
   
 }
+//seller check warehouse availability
+function checkWarehouseAvalability(product){
+  let productVolume = product.length * product.width * product.height
+  let avalableWarehouseList
+  let selectedWarehouse
+  connection.query(`
+  SELECT * 
+  FROM warehouse
+  WHERE total_volume >= ${productVolume}
+  ORDER BY total_volume DESC`,(err,result) =>{
+    if(err) throw new Error(err)
+    avalableWarehouseList = result
+    console.log("avalable warehouses selected(most space available at first index)")
+  })
+  if(avalableWarehouseList == null){
+    console.log("no warehouse avalable, canot add product")
+    return
+  }
+  selectedWarehouse = avalableWarehouseList[0]
+  product.warehouse_id = selectedWarehouse.id
+  console.log( `Product id:${product.id} added to warehouse id:${selectedWarehouse.id}`)
+  connection.query(`
+  UPDATE warehouse
+  SET total_volume = total_volume - ${productVolume},
+
+  WHERE id = ${selectedWarehouse.id}
+  `,(err,result) =>{
+    if(err) throw new Error(err)
+    console.log(`warehouse id:${selectedWarehouse.id}'s total_volume updated`)
+  })
+}
+
 
