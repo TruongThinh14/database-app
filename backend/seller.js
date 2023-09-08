@@ -1,8 +1,9 @@
 const mysql = require('mysql')
 const express = require("express")
 const { connect } = require('http2')
+const warehouseController = require('./controllers/warehouseController')
 const app = express()
-const port = 2222
+
 
 const connection = mysql.createConnection(
   {
@@ -15,14 +16,14 @@ const connection = mysql.createConnection(
 connection.connect((err) => {
   if(err) throw new Error(err);
   console.log("Connected")
-//drop database if exists(create unique name to prevent accidentally delete important database)
-  connection.query("DROP DATABASE IF EXISTS asm2DBss",(err,res) =>{
-    if(err) throw new Error(err);
-  console.log("database dropped")
-  return console.log(res)
-  })
+// //drop database if exists(create unique name to prevent accidentally delete important database)
+//   connection.query("DROP DATABASE IF EXISTS asm2DBss",(err,res) =>{
+//     if(err) throw new Error(err);
+//   console.log("database dropped")
+//   return console.log(res)
+//   })
 //create new database
-  connection.query("CREATE DATABASE asm2DBss",(err,res) =>{
+  connection.query("CREATE DATABASE IF NOT EXISTS asm2dbss",(err,res) =>{
     if(err) throw new Error(err);
   console.log("database created")
  // return console.log(res)
@@ -94,6 +95,13 @@ connection.connect((err) => {
     res.send(list)
 })
   })
+
+  // app.get("/test", (req,res)=>{
+  //   let warehouse;
+  //   warehouse =  findWarehouse(1)
+  //   res.send(warehouse)
+  // })
+ 
 //addmin add new ware house
   function addWarehouse(name,address,total_volume){
       //get max id from warehouse list to generate new id
@@ -112,12 +120,7 @@ connection.connect((err) => {
       })
   }
   //admin check warehouse info
-  function findWarehouse(inputId){
-    connection.query(`SELECT * FROM warehouse WHERE id = ${inputId}`,(err,result) =>{
-      if(err) throw new Error(err)
-      console.log(`Warehouse id:${newId} fetched`)
-    })
-  }
+  
 //admin edit warehouse
 function editWarehouse(inputId,inputName,inputAddress,inputTotalVolum){
   connection.query(`
