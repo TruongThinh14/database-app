@@ -25,12 +25,12 @@ connection.connect((err) => {
   connection.query("CREATE DATABASE asm2DBss",(err,res) =>{
     if(err) throw new Error(err);
   console.log("database created")
-  return console.log(res)
+ // return console.log(res)
   })
   connection.query("use asm2DBss",(err,res) =>{
     if(err) throw new Error(err);
   console.log("database used")
-  return console.log(res)
+ // return console.log(res)
   })
   //create seller product table
   connection.query(`CREATE TABLE seller_product(
@@ -41,9 +41,30 @@ connection.connect((err) => {
     imgString varchar(255), 
     length int, width int, height int)`,(err,res) =>{
     if(err) throw new Error(err)
-    console.log("table created")
-    return console.log(res)
+    console.log("table seller_product created")
+   // return console.log(res)
   })
+  //create warehouse table
+  connection.query(`CREATE TABLE warehouse(
+    id int PRIMARY KEY,
+    name varchar(255),
+    address varchar(255),
+    total_volume int)`,(err,res) =>{
+    if(err) throw new Error(err)
+    console.log("table warehouse created")
+ 
+   // return console.log(res)
+  })
+   //add data to warehouse table
+  connection.query(`INSERT INTO warehouse
+  VALUES
+  (1,"north warehouse","hanoi, d5,cau giay,52", 10000),
+  (2,"central warehouse","hue, d3, Nguyen trai, 73", 500),
+  (3,"south warehouse","hcm, d7, Nguyen Van Linh, 266", 1000)`,(err,res) =>{
+   if(err) throw new Error(err)
+   console.log("data added to table warehouse")
+   //return console.log(res)
+ })
   //add data to seller product table
   connection.query(`INSERT INTO seller_product
    VALUES
@@ -53,8 +74,8 @@ connection.connect((err) => {
    (4,"Bath tub","shower like a king", 1400000,"img String",100,50,30),
    (5,"Knife","package include whole set", 400000,"img String",20,10,5)`,(err,res) =>{
     if(err) throw new Error(err)
-    console.log("data added to table")
-    return console.log(res)
+    console.log("data added to table seller_product")
+    //return console.log(res)
   })
 
   app.use(bodyParser.json());
