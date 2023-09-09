@@ -77,5 +77,20 @@ exports.setupDb = () => {
           if(err) throw new Error(err)
           console.log("data added to table seller_product")
         })
+        //drop procedure if exist
+        connection.query(`DROP PROCEDURE IF EXISTS check_available_warehouse`)
+        //create store procedure to select available warehouse
+        connection.query(`
+          CREATE PROCEDURE check_available_warehouse(IN productVolume INT)
+          BEGIN
+            SELECT * 
+            FROM warehouse
+            WHERE total_volume >= productVolume
+            ORDER BY total_volume DESC;
+          END;
+        `,(err,result) =>{
+          if(err) throw new Error(err)
+          console.log("procedure check available warehouse created")
+        })
     })
 }

@@ -6,7 +6,7 @@ function route(app) {
     
     app.use('/seller', Seller);
     app.use('/warehouseAdmin',WarehouseAdmin)
-    app.use('/Category',Category)
+    app.use('/category',Category)
 }
 
 module.exports = route;

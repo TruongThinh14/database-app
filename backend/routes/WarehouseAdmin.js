@@ -76,7 +76,7 @@ function deleteWarehouse(req,res){
     connection.query(`select * from seller_product
         where warehouse_id = ${id}`,(err,result) =>{
         if(err) throw new Error(err)
-        console.log(result[0])
+        console.log(result)
         //if not delete warehouse from the list
         if(result[0] == undefined){
             console.log("warehouse is empty")

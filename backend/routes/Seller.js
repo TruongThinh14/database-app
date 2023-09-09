@@ -1,4 +1,5 @@
-const express = require("express")
+const express = require("express");
+const { connect } = require("http2");
 const router = express.Router();
 const mysql = require('mysql')
 
@@ -20,36 +21,60 @@ connection.query("use asm2DBss",(err,res) =>{
 // return console.log(res)
 })
 
+router.get("/:length/:width/:height",checkWarehouseAvalability)
+router.get("/find/:id",findProduct)
+router.post("/",addProduct)
+
+//find product
+function findProduct(req,res){
+  let{id} = req.params
+  connection.query(`
+  SELECT * FROM seller_product
+  WHERE id = ${id}
+  `,(err,result) =>{
+    if(err) throw new Error(err)
+    if(result[0] == undefined){
+      console.log("Product dont exists")
+      res.send(result)
+    }else{
+      res.send(result)
+    }
+  })
+}
+
+//add product
+function addProduct(req,res){
+  let product = req.body
+  console.log(product)
+  console.log("test")
+  connection.query(`
+    INSERT INTO seller_product(title,description,price,imgString,length,width,height,warehouse_id)
+    VALUES(${product.title},${product.description},${product.price},${product.imgString},${product.length},${product.width},${product.height},${product.warehouse_id})
+  `,(err,result) =>{
+    if(err) throw new Error(err)
+    console.log("Product added")
+    res.send(result)
+  })
+}
+
+
 
 
 function checkWarehouseAvalability(req,res){
-    let productVolume = product.length * product.width * product.height
-    let avalableWarehouseList
-    let selectedWarehouse
+  let {length} = req.params
+  let {width} = req.params
+  let {height} = req.params
+    let productVolume = length * width * height
     connection.query(`
-    SELECT * 
-    FROM warehouse
-    WHERE total_volume >= ${productVolume}
-    ORDER BY total_volume DESC`,(err,result) =>{
+    CALL check_available_warehouse(${productVolume})`,(err,result) =>{
       if(err) throw new Error(err)
-      avalableWarehouseList = result
-      console.log("avalable warehouses selected(most space available at first index)")
-    })
-    if(avalableWarehouseList == null){
-      console.log("no warehouse avalable, canot add product")
-      return
-    }
-    selectedWarehouse = avalableWarehouseList[0]
-    product.warehouse_id = selectedWarehouse.id
-    console.log( `Product id:${product.id} added to warehouse id:${selectedWarehouse.id}`)
-    connection.query(`
-    UPDATE warehouse
-    SET total_volume = total_volume - ${productVolume},
-  
-    WHERE id = ${selectedWarehouse.id}
-    `,(err,result) =>{
-      if(err) throw new Error(err)
-      console.log(`warehouse id:${selectedWarehouse.id}'s total_volume updated`)
+      if(result[0][0] == undefined){
+        console.log("no warehouse avalable, canot add product")
+        res.send(result)
+      }else{
+        res.send(result)
+      }
+      
     })
   }
 
