@@ -36,10 +36,11 @@ exports.setupDb = () => {
           id int PRIMARY KEY AUTO_INCREMENT,
           title varchar(255),
           description varchar(255),
-          price int, 
+          price INT, 
           imgString varchar(255), 
           length int, width int, height int,
-          warehouse_id INT REFERENCES warehouse(id))`,(err,res) =>{
+          quantity INT,
+          category_id INT)`,(err,res) =>{
           if(err) throw new Error(err)
           console.log("table seller_product created")
          // return console.log(res)
@@ -49,7 +50,8 @@ exports.setupDb = () => {
           id int PRIMARY KEY AUTO_INCREMENT,
           name varchar(255),
           address varchar(255),
-          total_volume int
+          total_volume int,
+          product_number int
           )`,(err,res) =>{
           if(err) throw new Error(err)
           console.log("table warehouse created")
@@ -59,9 +61,9 @@ exports.setupDb = () => {
          //add data to warehouse table
         connection.query(`INSERT INTO warehouse
         VALUES
-        (1,"north warehouse","hanoi, d5,cau giay,52", 90000),
-        (2,"central warehouse","hue, d3, Nguyen trai, 73", 500),
-        (3,"south warehouse","hcm, d7, Nguyen Van Linh, 266", 1000)`,(err,res) =>{
+        (1,"north warehouse","hanoi, d5,cau giay,52", 30,0),
+        (2,"central warehouse","hue, d3, Nguyen trai, 73", 20,0),
+        (3,"south warehouse","hcm, d7, Nguyen Van Linh, 266", 10,1)`,(err,res) =>{
          if(err) throw new Error(err)
          console.log("data added to table warehouse")
          //return console.log(res)
@@ -69,11 +71,11 @@ exports.setupDb = () => {
         //add data to seller product table
         connection.query(`INSERT INTO seller_product
          VALUES
-         (1,"watermelon","juicy and delicious", 10000,"img String",10,10,10,1),
-         (2,"RC car","fast and cheap", 50000,"img String",20,7,13,3),
-         (3,"Couch","super comfy", 700000,"img String",100,40,40,1),
-         (4,"Bath tub","shower like a king", 1400000,"img String",100,50,30,3),
-         (5,"Knife","package include whole set", 400000,"img String",20,10,5,3)`,(err,res) =>{
+         (1,"watermelon","juicy and delicious", 10000,"th.jpg",10,10,10,0,1),
+         (2,"RC car","fast and cheap", 50000,"th.jpg",20,7,13,0,1),
+         (3,"Couch","super comfy", 700000,"th.jpg",100,40,40,0,1),
+         (4,"Bath tub","shower like a king", 1400000,"th.jpg",100,50,30,0,1),
+         (5,"Knife","package include whole set", 400000,"th.jpg",20,10,5,0,1)`,(err,res) =>{
           if(err) throw new Error(err)
           console.log("data added to table seller_product")
         })

@@ -21,11 +21,20 @@ connection.query("use asm2DBss",(err,res) =>{
 // return console.log(res)
 })
 
+router.get("/",getAllWarehouse)
 router.get("/:inputId", viewWarehouse)
 router.post("/:name/:address/:total_volume",addWarehouse)
 router.put("/:id/:newName/:newAddress/:newTotalVolume",editWarehouse)
 router.delete("/:id",deleteWarehouse)
-//inputId,inputName,inputAddress,inputTotalVolum
+
+
+function getAllWarehouse(req,res){
+    connection.query(`SELECT * FROM warehouse`,(err,result)=>{
+        if(err) throw new Error(err)
+        res.send(result)
+    })
+    
+}
 
 //view warehouse detail
 function viewWarehouse(req, res){
@@ -44,9 +53,9 @@ function addWarehouse(req,res){
     let{total_volume} = req.params
     //insert new warehouse to db
     connection.query(`
-    INSERT INTO warehouse (name,address,total_volume)
+    INSERT INTO warehouse (name,address,total_volume,product_number)
     VALUES
-    (${name},${address}, ${total_volume})
+    (${name},${address}, ${total_volume},0)
     `,(err,result) =>{
       if(err) throw new Error(err)
       console.log(`Warehouse added`)
@@ -72,25 +81,19 @@ function editWarehouse(req,res){
 
 function deleteWarehouse(req,res){
     let{id} = req.params
-    //check if their is any product in the warehouse
-    connection.query(`select * from seller_product
-        where warehouse_id = ${id}`,(err,result) =>{
-        if(err) throw new Error(err)
-        console.log(result)
-        //if not delete warehouse from the list
-        if(result[0] == undefined){
-            console.log("warehouse is empty")
-            connection.query(`
-                DELETE FROM warehouse
-                WHERE id = ${id}`,(err,result) =>{
-                    if(err) throw new Error(err)
-                    console.log(`Warehouse id:${id} deleted`)
-                    res.send(result)
-                })
-        }else{
-            console.log(`warehouse not empty can not delete`)
-            res.send(result)
-        }    
+    connection.query(`
+        DELETE FROM warehouse
+        WHERE id = ${id} AND product_number = 0`,(err,result) =>{
+            if(err) throw new Error(err)
+            if(result[0] == undefined){
+                console.log("warehouse is not empty")
+                res.send(result)
+            }else{
+                console.log(`warehouse id:${id} deleted`)
+                res.send(result)
+            }
+
+            
     })
 }
 module.exports = router

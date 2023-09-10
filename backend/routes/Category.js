@@ -27,7 +27,7 @@ async function updateCategory(req,res){
 }
 async function deleteCategory(req,res){
         const {id} = req.params
-        await Category.findByIdAndDelete(id)
+        await Category.findOneAndDelete({categiory_id : id})
         res.sendStatus(200)
 }
 module.exports = router

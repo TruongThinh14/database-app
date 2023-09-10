@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const categorySchema = new mongoose.Schema({
   name: { type: String, require: true },
   parentCategoryId: { type: mongoose.Schema.Types.ObjectId, default: null },
+  categiory_id:{type: Number, require:true},
   attributes: {
     type: Array, default: []
   }

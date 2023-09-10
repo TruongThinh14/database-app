@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <h2 style="text-align: center;">Add Product</h2>
+    <div class="edit-seller-product-form">
+        <div class="left">
+            <input type="text" placeholder="title" class="product-title" required/>
+            <input type="text" placeholder="description" class="product-description" required/>
+            <input type="number" placeholder="price" class="product-price" required/>
+            <input type="text" placeholder="imgURL" class="product-imgURL" required/>
+            <a href="seller.html">cancle</a>
+        </div>
+        <div class="right">
+            <input type="number" placeholder="lenght" class="product-lenght" required/>
+            <input type="number" placeholder="width" class="product-width" required/>
+            <input type="number" placeholder="height" class="product-height" required/>
+            <input type="number" placeholder="category id" class="product-categoryId" required/>
+            <button onclick="addProduct()">Add product</button>
+        </div>
+       
+    </div>
+    <script src="sellerAddProduct.js"></script>
+</body>
+</html>
