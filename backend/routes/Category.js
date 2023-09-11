@@ -15,6 +15,7 @@ async function getCategoryList(req,res){
 
 async function addCategoy(req,res){
         const category = req.body
+        console.log(req.body)
         await Category.create(category)
         res.sendStatus(201)
 }

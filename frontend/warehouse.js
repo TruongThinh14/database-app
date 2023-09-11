@@ -5,8 +5,8 @@ async function getAdminWarehouse(){
     const warehousetList = await res.json();
     let warehouseListHtml = warehousetList.map(warehouse => `
     <div class="category-item">
-        <p>name:<b>${warehouse.id}</b></p>
-        <p>id:<b>${warehouse.name}</b></p>
+        <p>name:<b>${warehouse.name}</b></p>
+        <p>id:<b>${warehouse.id}</b></p>
         <p>Address:<b>${warehouse.address}</b></p>
         <p>Avalable volume:<b>${warehouse.total_volume}</b></p>
         <!-- reuse css class -->

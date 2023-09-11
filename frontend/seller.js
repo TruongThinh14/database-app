@@ -16,7 +16,7 @@ async function getSellerProduct(){
         <p>Dimension:<b>l:${product.length}, w:${product.width}, h:${product.height}</b></p>
     </div>
     <div class="product-item-btn">
-        <a href="#">edit</a>
+        <a href="sellerEditProduct.html">edit</a>
         <button onclick="deleteProduct(${product.id})">delete</button>
     </div>
 </div>`)

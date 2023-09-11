@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <!-- resure seller product from -->
+    <h2 style="text-align: center;">Add Category</h2>
+    <div class="edit-seller-product-form">
+        <div class="left">
+            <input type="text" placeholder="name" class="category-name" required/>
+            <input type="number" placeholder="parentid" class="category-parentId" required/>
+            
+            <a href="adminCategory.html">cancel</a>
+        </div>
+        <div class="right">
+            <input type="number" placeholder="categhoryId" class="category-id" required/>
+           
+            <button onclick="addCategory()">Add Category</button>
+        </div>
+        <script src="addCategory.js"></script>
+</body>
+</html>

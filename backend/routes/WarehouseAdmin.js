@@ -20,10 +20,10 @@ connection.query("use asm2DBss",(err,res) =>{
     console.log("database used")
 // return console.log(res)
 })
-
+router.use(express.json())
 router.get("/",getAllWarehouse)
 router.get("/:inputId", viewWarehouse)
-router.post("/:name/:address/:total_volume",addWarehouse)
+router.post("/",addWarehouse)
 router.put("/:id/:newName/:newAddress/:newTotalVolume",editWarehouse)
 router.delete("/:id",deleteWarehouse)
 
@@ -48,14 +48,12 @@ function viewWarehouse(req, res){
 
 //add warehouse into the db
 function addWarehouse(req,res){
-    let{name} = req.params
-    let{address} = req.params
-    let{total_volume} = req.params
+    let{name,address,total_volume} = req.body
     //insert new warehouse to db
     connection.query(`
     INSERT INTO warehouse (name,address,total_volume,product_number)
     VALUES
-    (${name},${address}, ${total_volume},0)
+    ("${name}","${address}", ${total_volume},0)
     `,(err,result) =>{
       if(err) throw new Error(err)
       console.log(`Warehouse added`)

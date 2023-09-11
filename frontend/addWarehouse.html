@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    <!-- resure seller product from -->
+    <h2 style="text-align: center;">Add warehouse</h2>
+    <div class="edit-seller-product-form">
+        <div class="left">
+            <input type="text" placeholder="name" class="warehouse-name" required/>
+            <input type="text" placeholder="address" class="warehouse-address" required/>
+           
+            <a href="adminWarehouse.html">cancle</a>
+        </div>
+        <div class="right">
+            <input type="number" placeholder="total_volume" class="warehouse-totalvolume" required/>
+            <button onclick="addWarehouse()">Add warehouse</button>
+        </div>
+       
+    </div>
+    <script src="addWarehouse.js"></script>
+</body>
+</html>
